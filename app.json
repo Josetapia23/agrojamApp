@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "argoJamAS",
-    "slug": "argoJamAS",
-    "version": "1.0.0",
+    "name": "agroJamAS",
+    "slug": "agroJamAs",
+    "version": "1.1.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/imgApp.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,12 +17,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/imgApp.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jose23.agroJamAs"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4fea7f3d-0783-4348-8a18-f36ba831ff7a"
+      }
+    },
+    "plugins": [
+      "expo-build-properties",
+      "expo-font"
+    ]
   }
 }
