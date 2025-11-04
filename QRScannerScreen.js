@@ -29,15 +29,57 @@ const QRScannerScreen = ({ navigation }) => {
     );
   }
 
+  // ✅ FUNCIÓN PARA PARSEAR LOS DATOS DEL QR
+  const parseQRData = (qrText) => {
+    const lines = qrText.split('\n');
+    const userData = {};
+    
+    lines.forEach(line => {
+      if (line.includes('Usuario:')) {
+        userData.nombre = line.replace('Usuario:', '').trim();
+      } else if (line.includes('Correo:')) {
+        userData.correo = line.replace('Correo:', '').trim();
+      } else if (line.includes('Documento:')) {
+        userData.documento = line.replace('Documento:', '').trim();
+      } else if (line.includes('Código:')) {
+        userData.codigo = line.replace('Código:', '').trim();
+      }
+    });
+    
+    return userData;
+  };
+
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     setScannedData(data);
-    console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+    
+    // ✅ LOG DETALLADO DEL QR ESCANEADO
+    console.log('=== QR ESCANEADO ===');
+    console.log('Tipo de código:', type);
+    console.log('Datos del QR:', data);
+    console.log('Longitud de datos:', data.length);
+    console.log('===================');
 
     try {
+      // ✅ EXTRAER EL CÓDIGO QR DEL FORMATO COMPLETO
+      const userData = parseQRData(data);
+      const qrCodeToSend = userData.codigo || data; // Si no tiene código, enviar QR completo
+      
+      console.log('� CÓDIGO QR EXTRAÍDO:', qrCodeToSend);
+      
+      // ✅ LOG DE LA PETICIÓN QUE SE VA A ENVIAR
+      const requestData = qs.stringify({ 
+        qrData: qrCodeToSend, // Enviar el código QR (USR-xxxxx)
+        forceDate: new Date().toISOString().split('T')[0] // Envía fecha actual YYYY-MM-DD
+      });
+      console.log('📤 ENVIANDO PETICIÓN:');
+      console.log('URL:', 'http://10.9.222.141/backAgroJam/registerAttendance.php');
+      console.log('Data enviada:', requestData);
+      console.log('Headers:', { 'Content-Type': 'application/x-www-form-urlencoded' });
+
       const response = await axios.post(
-        'https://www.agrojamsena.com/backagrojam/registerAttendance.php',
-        qs.stringify({ qrData: data }),
+        'http://10.9.222.141/backAgroJam/registerAttendance.php', // Cambié backagrojam por backAgroJam
+        requestData,
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,7 +87,12 @@ const QRScannerScreen = ({ navigation }) => {
         }
       );
 
-      console.log('Respuesta del servidor', response.data);
+      // ✅ LOG DETALLADO DE LA RESPUESTA
+      console.log('📥 RESPUESTA RECIBIDA:');
+      console.log('Status:', response.status);
+      console.log('Headers de respuesta:', response.headers);
+      console.log('Data completa:', JSON.stringify(response.data, null, 2));
+      console.log('===================');
 
       if (response.data.success) {
         if (response.data.already_registered) {
@@ -79,16 +126,62 @@ const QRScannerScreen = ({ navigation }) => {
           );
         }
       } else {
-        showCustomAlert('Error', response.data.error || 'No se pudo registrar la asistencia.', [
-          {
-            text: 'OK',
-            style: 'close',
-            onPress: closeCustomAlert,
-          },
-        ]);
+        // ✅ LOG CUANDO EL SERVIDOR RESPONDE PERO HAY ERROR
+        console.log('❌ ERROR DEL SERVIDOR:');
+        console.log('success:', response.data.success);
+        console.log('error:', response.data.error);
+        console.log('response.data completo:', JSON.stringify(response.data, null, 2));
+        
+        // ✅ PARSEAMOS Y MOSTRAMOS LA INFO DEL QR AUNQUE HAYA ERROR
+        const userData = parseQRData(data);
+        
+        showCustomAlert(
+          'Error de Fecha', 
+          <Text>
+            <Text style={{ fontWeight: 'bold', color: '#D9534F' }}>
+              {response.data.error}
+            </Text>
+            {'\n\n'}
+            <Text style={{ fontWeight: 'bold' }}>Información del QR:</Text>
+            {'\n'}
+            👤 Usuario: <Text style={{ color: '#1F8901' }}>{userData.nombre}</Text>
+            {'\n'}
+            📧 Correo: {userData.correo}
+            {'\n'}
+            🆔 Documento: {userData.documento}
+          </Text>, 
+          [
+            {
+              text: 'Cerrar',
+              style: 'close',
+              onPress: closeCustomAlert,
+            },
+            {
+              text: 'Reintentar',
+              style: 'confirm',
+              onPress: () => {
+                closeCustomAlert();
+                setScanned(false); // Permite escanear de nuevo
+              },
+            },
+          ]
+        );
       }
     } catch (error) {
-      console.error('Error al procesar el QR:', error);
+      // ✅ LOG DETALLADO DE ERRORES
+      console.log('🚨 ERROR EN LA PETICIÓN:');
+      console.log('Error message:', error.message);
+      console.log('Error completo:', error);
+      if (error.response) {
+        console.log('Status del error:', error.response.status);
+        console.log('Data del error:', error.response.data);
+        console.log('Headers del error:', error.response.headers);
+      } else if (error.request) {
+        console.log('No hubo respuesta del servidor');
+        console.log('Request:', error.request);
+      }
+      console.log('===================');
+      
       showCustomAlert('Error', 'Hubo un problema al procesar el código QR. Por favor, intente de nuevo.', [
         {
           text: 'OK',
