@@ -2,9 +2,9 @@
   "expo": {
     "name": "agroJamAS",
     "slug": "agroJamAs",
-    "version": "1.1.1",
+    "version": "1.1.6",
     "orientation": "portrait",
-    "icon": "./assets/imgApp.png",
+    "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,10 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imgApp.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jose23.agroJamAs"
+      "package": "com.jose23.agroJamAs",
+      "versionCode": 6,
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35,
+      "privacyPolicy": "https://tecnoparqueatlantico.com/agrojam/politicas/privacy-policy.html"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,7 +35,16 @@
       }
     },
     "plugins": [
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
+          }
+        }
+      ],
       "expo-font"
     ]
   }

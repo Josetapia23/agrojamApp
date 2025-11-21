@@ -73,12 +73,15 @@ const QRScannerScreen = ({ navigation }) => {
         forceDate: new Date().toISOString().split('T')[0] // Envía fecha actual YYYY-MM-DD
       });
       console.log('📤 ENVIANDO PETICIÓN:');
-      console.log('URL:', 'http://10.9.222.141/backAgroJam/registerAttendance.php');
+      console.log('URL:', 'https://tecnoparqueatlantico.com/agrojam/backAgroJam/registerAttendance.php');
+      //console.log('URL:', 'http://10.9.222.141/backagrojam/registerAttendance.php');
+
       console.log('Data enviada:', requestData);
       console.log('Headers:', { 'Content-Type': 'application/x-www-form-urlencoded' });
 
       const response = await axios.post(
-        'http://10.9.222.141/backAgroJam/registerAttendance.php', // Cambié backagrojam por backAgroJam
+        'https://tecnoparqueatlantico.com/agrojam/backAgroJam/registerAttendance.php',
+        //'http://10.9.222.141/backagrojam/registerAttendance.php',
         requestData,
         {
           headers: {

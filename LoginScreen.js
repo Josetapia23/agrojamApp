@@ -23,8 +23,8 @@ const LoginScreen = () => {
     setIsLoading(true);
 
     try {
-      //const response = await axios.post('https://www.agrojamsena.com/backagrojam/login.php', {
-      const response = await axios.post('http://10.9.222.141/backagrojam/login.php', {
+      //const response = await axios.post('http://10.9.222.141/backagrojam/login.php', {
+      const response = await axios.post('https://tecnoparqueatlantico.com/agrojam/backAgroJam/login.php', {
         username,
         password,
       });
