@@ -31,6 +31,26 @@ const QRScannerScreen = ({ navigation }) => {
 
   // ✅ FUNCIÓN PARA PARSEAR LOS DATOS DEL QR
   const parseQRData = (qrText) => {
+    // Intentar parsear como JSON primero (nuevo formato)
+    try {
+      const jsonData = JSON.parse(qrText);
+      if (jsonData && typeof jsonData === 'object') {
+        console.log('🆕 Formato detectado: JSON directo');
+        console.log('JSON parseado:', jsonData);
+        
+        return {
+          nombre: jsonData.nombre_completo || jsonData.nombre,
+          correo: jsonData.correo || '',
+          documento: jsonData.documento,
+          codigo: jsonData.codigo_unico || jsonData.codigo,
+          id: jsonData.id
+        };
+      }
+    } catch (error) {
+      console.log('No es JSON válido, probando formato de texto...');
+    }
+    
+    // Si no es JSON, usar el formato anterior de líneas de texto
     const lines = qrText.split('\n');
     const userData = {};
     
@@ -65,7 +85,8 @@ const QRScannerScreen = ({ navigation }) => {
       const userData = parseQRData(data);
       const qrCodeToSend = userData.codigo || data; // Si no tiene código, enviar QR completo
       
-      console.log('� CÓDIGO QR EXTRAÍDO:', qrCodeToSend);
+      console.log('📋 DATOS PARSEADOS:', userData);
+      console.log('🎯 CÓDIGO QR EXTRAÍDO:', qrCodeToSend);
       
       // ✅ LOG DE LA PETICIÓN QUE SE VA A ENVIAR
       const requestData = qs.stringify({ 
