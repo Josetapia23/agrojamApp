@@ -2,7 +2,7 @@
   "expo": {
     "name": "agroJamAS",
     "slug": "agroJamAs",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "orientation": "portrait",
     "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.jose23.agroJamAs",
-      "versionCode": 6,
+      "versionCode": 7,
       "compileSdkVersion": 35,
       "targetSdkVersion": 35,
       "privacyPolicy": "https://tecnoparqueatlantico.com/agrojam/politicas/privacy-policy.html"
